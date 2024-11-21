@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Akshay!</title>
+    <style>
+        /* Basic page styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(45deg, #ffcbdb, #f5e6ea);
+            overflow: hidden;
+            animation: backgroundMove 10s infinite linear;
+        }
+
+        /* Smooth gradient background animation */
+        @keyframes backgroundMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 100% 100%; }
+        }
+
+        /* Container styling */
+        .container {
+            text-align: center;
+            background: #ffcbdb;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        /* Text fading animation */
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Main birthday greeting */
+        h1 {
+            font-size: 3.5em;
+            color: #ff6f91;
+            margin-bottom: 0;
+            animation: slideIn 1s ease-out;
+        }
+
+        /* Slide-in animation for the header */
+        @keyframes slideIn {
+            0% { transform: translateY(-50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Message under the greeting */
+        p {
+            font-size: 1.5em;
+            color: #333;
+            margin-top: 10px;
+            opacity: 0;
+            animation: fadeInText 1.5s ease-in-out 0.5s forwards;
+        }
+
+        /* Fade-in animation for text */
+        @keyframes fadeInText {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Image animation */
+        .birthday-img {
+            width: 200px;
+            border-radius: 50%;
+            margin-top: 20px;
+            animation: bounce 1s infinite alternate;
+        }
+
+        /* Bounce animation for the image */
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-15px); }
+        }
+
+        /* Button style with hover effect */
+        .button {
+            background-color: #ff6f91;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        /* Hover animation for button */
+        .button:hover {
+            transform: scale(1.1);
+        }
+
+        /* Canvas for confetti */
+        .confetti {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Happy Birthday, Akshay bhai!</h1>
+        <p>Apke din khushiyon se bhara ho, mazedaar pal guzaaro, aur har ek moment ka maza lo!"</p>
+        <img src="https://images.app.goo.gl/qJsZDSoLjFcSHSk67" alt="Birthday Image" class="birthday-img">
+        <button class="button" onclick="startConfetti()">Let's Celebrate!</button>
+    </div>
+
+    <canvas class="confetti" id="confettiCanvas"></canvas>
+
+    <script>
+        const button = document.querySelector('.button');
+        const canvas = document.getElementById('confettiCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Make canvas fill the entire screen
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Create confetti particles with rotation and color change
+        function createConfetti() {
+            const confettiColors = ['#ff6f91', '#ffcbdb', '#ff8da5', '#ff3e5a', '#fdcce5'];
+            const size = Math.random() * 5 + 5;
+            const confetti = {
+                x: Math.random() * canvas.width,
+                y: -10,
+                size: size,
+                color: confettiColors[Math.floor(Math.random() * confettiColors.length)],
+                speedX: Math.random() * 5 - 2.5,
+                speedY: Math.random() * 3 + 2,
+                rotation: Math.random() * 360,
+                rotationSpeed: Math.random() * 2 - 1
+            };
+            return confetti;
+        }
+
+        const confettiArray = [];
+
+        // Start confetti animation
+        function startConfetti() {
+            button.style.display = 'none';  // Hide the button after clicking
+            canvas.style.display = 'block'; // Show the canvas
+            setInterval(() => {
+                confettiArray.push(createConfetti());
+            }, 50);
+
+            animateConfetti();
+        }
+
+        // Animation loop for confetti
+        function animateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            confettiArray.forEach((confetti, index) => {
+                ctx.save();
+                ctx.translate(confetti.x, confetti.y);
+                ctx.rotate(confetti.rotation * Math.PI / 180);  // Apply rotation
+
+                // Draw the confetti
+                ctx.beginPath();
+                ctx.arc(0, 0, confetti.size, 0, Math.PI * 2);
+                ctx.fillStyle = confetti.color;
+                ctx.fill();
+                ctx.closePath();
+
+                // Update positions and rotation
+                confetti.x += confetti.speedX;
+                confetti.y += confetti.speedY;
+                confetti.rotation += confetti.rotationSpeed;
+
+                // Remove confetti when it goes off screen
+                if (confetti.y > canvas.height) {
+                    confettiArray.splice(index, 1);
+                }
+
+                ctx.restore();
+            });
+            requestAnimationFrame(animateConfetti);
+        }
+    </script>
+</body>
+</html>
